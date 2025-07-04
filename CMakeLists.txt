@@ -56,7 +56,7 @@ set(LIBRARY_NAME engine)  # Default name for the library built from src/*.cpp (c
 # Compile all sources into a library.
 add_library(${LIBRARY_NAME} OBJECT ${SOURCES})
 
-if (!{OpenCV_FOUND})
+if (NOT OpenCV_FOUND)
     add_dependencies(${LIBRARY_NAME} install_opencv)
 endif ()
 
