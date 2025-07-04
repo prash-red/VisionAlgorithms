@@ -12,7 +12,6 @@ cmake_minimum_required(VERSION 3.14)
 # the source. See version.h.in for some more details.
 project(VisionAlgorithms VERSION 0.1 LANGUAGES CXX)
 
-find_package(OpenCV REQUIRED)  # Find OpenCV, which is required for this project.
 # Options: Things you can set via commandline options to cmake (e.g. -DENABLE_LTO=[ON|OFF])
 option(ENABLE_WARNINGS_SETTINGS "Allow target_set_warnings to add flags and defines.
                                  Set this to OFF if you want to provide your own warning parameters." ON)
@@ -30,13 +29,16 @@ include(Documentation)
 include(LTO)
 include(Misc)
 include(Warnings)
-include(${CMAKE_SOURCE_DIR}/dependencies.cmake)
-include_directories(
-        ${OpenCV_INCLUDE_DIRS}         # Include OpenCV headers.
-)
+include(Dependencies)
 # Check for LTO support.
 find_lto(CXX)
 
+# --------------------------------------------------------------------------------
+#                                  Dependencies
+# --------------------------------------------------------------------------------
+
+
+#
 # --------------------------------------------------------------------------------
 #                         Locate files (change as needed).
 # --------------------------------------------------------------------------------
@@ -54,8 +56,12 @@ set(LIBRARY_NAME engine)  # Default name for the library built from src/*.cpp (c
 # Compile all sources into a library.
 add_library(${LIBRARY_NAME} OBJECT ${SOURCES})
 
+if (NOT OpenCV_FOUND)
+    add_dependencies(${LIBRARY_NAME} install_opencv)
+endif ()
+
 # Lib needs its header files, and users of the library must also see these (PUBLIC). (No change needed)
-target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include ${OpenCV_INCLUDE_DIRS})
 
 # There's also (probably) doctests within the library, so we need to see this as well.
 target_link_libraries(${LIBRARY_NAME} PUBLIC doctest ${OpenCV_LIBS} CLI11::CLI11)
