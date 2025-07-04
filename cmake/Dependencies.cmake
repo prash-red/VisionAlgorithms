@@ -5,7 +5,7 @@ file(
         CPM.cmake
         EXPECTED_HASH SHA256=2020b4fc42dba44817983e06342e682ecfc3d2f484a581f11cc5731fbe4dce8a
 )
-include(${CMAKE_MODULE_PATH}/CPM.cmake)
+include(${CMAKE_CURRENT_BINARY_DIR}/CPM.cmake)
 
 # add dependencies here
 CPMAddPackage(
@@ -22,7 +22,6 @@ find_package(OpenCV)
 
 if(${OpenCV_FOUND})
     message(STATUS "OpenCV found: ${OpenCV_DIR}")
-    include_directories(${OpenCV_INCLUDE_DIRS})
 else()
     message(STATUS "OpenCV not found. Downloading and building from source...")
     set(OpenCV_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/opencv-install)

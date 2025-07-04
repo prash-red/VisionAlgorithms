@@ -56,6 +56,10 @@ set(LIBRARY_NAME engine)  # Default name for the library built from src/*.cpp (c
 # Compile all sources into a library.
 add_library(${LIBRARY_NAME} OBJECT ${SOURCES})
 
+if (!{OpenCV_FOUND})
+    add_dependencies(${LIBRARY_NAME} install_opencv)
+endif ()
+
 # Lib needs its header files, and users of the library must also see these (PUBLIC). (No change needed)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include ${OpenCV_INCLUDE_DIRS})
 
