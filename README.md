@@ -1,4 +1,4 @@
-# VisionAlgorithms
+# VisionAlgorithms [![Ubuntu](https://github.com/prash-red/VisionAlgorithms/actions/workflows/ci.yml/badge.svg)](https://github.com/prash-red/VisionAlgorithms/actions/workflows/ci.yml) [![Ubuntu](https://github.com/prash-red/VisionAlgorithms/actions/workflows/ci-with-cuda.yml/badge.svg)](https://github.com/prash-red/VisionAlgorithms/actions/workflows/ci-with-cuda.yml)
 
 A CLI tool to run computer vision algorithms.  
 Currently, only the homography algorithm is implemented.
@@ -11,38 +11,43 @@ Currently, only the homography algorithm is implemented.
 
 ## Build Instructions
 
-1. **Clone the repository:**
-   ```sh
+1. ### Clone the repository:
+   ```bash
    git clone https://github.com/prash-red/VisionAlgorithms.git
    cd VisionAlgorithms
    ```
 
-2. **Install dependencies:**
+2. ### Install dependencies:
     - CMake (>= 3.14)
-    - OpenCV
-    - CLI11
+    - OpenCV (>= 4.5)
+    - CLI11 (>= 2.1)
+    - CUDA (optional, for GPU support)
 
    OpenCV is recommended to built from source
 
-3. **Build the project:**
-   ```sh
-   mkdir build
-   cd build
-   cmake ..
-   make
+3. ### Build the project:
+   3.1 **For CPU**
+   ```bash
+   cmake -S ./ -B build
+   cmake --build build   
    ```
+   3.2 **For GPU** (requires CUDA)
+    ```bash
+    cmake -S ./ -B build -DENABLE_CUDA=ON
+    cmake --build build
+    ```
 
 ## Usage
 
 Run the homography algorithm:
 
-```sh
+```bash
 ./build/cv homography -f <image_path> -s <x0> <y0> <x1> <y1> <x2> <y2> <x3> <y3> -d <x0'> <y0'> <x1'> <y1'> <x2'> <y2'> <x3'> <y3'>
 ```
 
 Or use a coordinates file:
 
-```sh
+```bash
 ./build/cv homography -f <image_path> -c <coords_file>
 ```
 
@@ -51,10 +56,11 @@ Or use a coordinates file:
 - `-d, --destination` : 4 destination points (8 integers, separated by spaces)
 - `-c, --coords-file` : File with 4 source and 4 destination coordinates (each line: `x,y`)
 - `-o, --output-file` : Output image file (optional; if not set, displays the result)
+- `--cuda` : Use CUDA for processing (optional; requires CUDA support)
 
 **Example:**
 An example image with coordinates has been provided in the test folder
 
-```sh
+```bash
 ./build/cv homography -f tests/test_data/homography/document.jpg -c tests/test_data/homography/coords.txt 
 ```

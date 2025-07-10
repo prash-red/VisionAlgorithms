@@ -12,15 +12,15 @@ jobs:
     strategy:
       matrix:
         toolchain:
-          - linux-gcc
+          - linux-nvcc
 
         configuration:
           - Debug
 
         include:
-          - toolchain: linux-gcc
+          - toolchain: linux-nvcc
             os: ubuntu-latest
-            compiler: gcc
+            compiler: nvcc
 
     steps:
       - name: Setup CUDA Toolkit
@@ -41,7 +41,7 @@ jobs:
             ${{ runner.os }}-build- 
 
       - name: Configure (${{ matrix.configuration }})
-        run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+        run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_CUDA=ON
 
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
