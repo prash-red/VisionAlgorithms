@@ -12,15 +12,15 @@ jobs:
     strategy:
       matrix:
         toolchain:
-          - linux-gcc
+          - linux-nvcc
 
         configuration:
           - Debug
 
         include:
-          - toolchain: linux-gcc
+          - toolchain: linux-nvcc
             os: ubuntu-latest
-            compiler: gcc
+            compiler: nvcc
 
     steps:
       - name: Setup CUDA Toolkit
