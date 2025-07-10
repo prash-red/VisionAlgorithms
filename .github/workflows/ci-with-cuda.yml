@@ -1,7 +1,6 @@
 name: CI with CUDA
 
 on:
-  push:
   pull_request:
 
 jobs:
