@@ -5,7 +5,7 @@
 #
 # For many purposes, you may not need to change anything about this file.
 
-cmake_minimum_required(VERSION 3.18...3.31)
+cmake_minimum_required(VERSION 3.31)
 
 # Set project name, version and laguages here. (change as needed)
 # Version numbers are available by including "exampleConfig.h" in
@@ -41,22 +41,12 @@ endif ()
 # Check for LTO support.
 find_lto(CXX)
 
-function(CUDA_CONVERT_FLAGS EXISTING_TARGET)
-    get_property(old_flags TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS)
-    if(NOT "${old_flags}" STREQUAL "")
-        string(REPLACE ";" "," CUDA_flags "${old_flags}")
-        set_property(TARGET ${EXISTING_TARGET} PROPERTY INTERFACE_COMPILE_OPTIONS
-                "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${old_flags}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${CUDA_flags}>"
-        )
-    endif()
-endfunction()
-
 add_library(compiler_flags INTERFACE)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CUDA_EXTENSIONS OFF)
 
 set(cxx_flags -Wall)
-set(cuda_flags -Xcompiler=-Wall)
+set(cuda_flags -Xcompiler=-Wall -Wno-deprecated-gpu-targets)
 add_library(developer_flags INTERFACE)
 target_compile_options(developer_flags
         INTERFACE
@@ -79,7 +69,6 @@ endif ()
 set(SOURCES          # All .cpp files in src/
         src/algorithms/cpu_homographer.cpp
         src/algorithms/base_homographer.cpp
-        include/cuda_helpers/cuda_constants.h
 )
 if(ENABLE_CUDA)
     list(APPEND SOURCES src/algorithms/cuda_homographer.cu)
@@ -93,7 +82,7 @@ set(LIBRARY_NAME engine)  # Default name for the library built from src/*.cpp (c
 #                            Build! (Change as needed)
 # --------------------------------------------------------------------------------
 # Compile all sources into a library.
-add_library(${LIBRARY_NAME} OBJECT ${SOURCES})
+add_library(${LIBRARY_NAME} SHARED ${SOURCES})
 
 if (NOT OpenCV_FOUND)
     add_dependencies(${LIBRARY_NAME} install_opencv)
