@@ -1,4 +1,4 @@
-# VisionAlgorithms
+# VisionAlgorithms [![Ubuntu](https://github.com/prash-red/VisionAlgorithms/actions/workflows/ci.yml/badge.svg)](https://github.com/prash-red/VisionAlgorithms/actions/workflows/ci.yml) [![Ubuntu](https://github.com/prash-red/VisionAlgorithms/actions/workflows/ci-with-cuda.yml/badge.svg)](https://github.com/prash-red/VisionAlgorithms/actions/workflows/ci-with-cuda.yml)
 
 A CLI tool to run computer vision algorithms.  
 Currently, only the homography algorithm is implemented.
@@ -26,12 +26,12 @@ Currently, only the homography algorithm is implemented.
    OpenCV is recommended to built from source
 
 3. ### Build the project:
-   3.1 **For CPU** 
+   3.1 **For CPU**
    ```bash
    cmake -S ./ -B build
    cmake --build build   
    ```
-    3.2 **For GPU** (requires CUDA)
+   3.2 **For GPU** (requires CUDA)
     ```bash
     cmake -S ./ -B build -DENABLE_CUDA=ON
     cmake --build build

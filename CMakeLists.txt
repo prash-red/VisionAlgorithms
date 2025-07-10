@@ -22,7 +22,6 @@ option(ENABLE_DOCTESTS "Include tests in the library. Setting this to OFF will r
 option(ENABLE_CUDA "Enable CUDA" OFF)
 if(ENABLE_CUDA)
     enable_language(CUDA)
-    set(CMAKE_CUDA_ARCHITECTURES native)
 endif ()
 
 # Include stuff. No change needed.
@@ -36,6 +35,9 @@ include(LTO)
 include(Misc)
 include(Warnings)
 include(Dependencies)
+if(ENABLE_CUDA)
+    include(AutoDetectCudaArch)
+endif ()
 # Check for LTO support.
 find_lto(CXX)
 
