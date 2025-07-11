@@ -1,3 +1,4 @@
+---
 name: CI with CUDA
 
 on:
@@ -30,6 +31,7 @@ jobs:
         with:
           cuda: '12.8.0'
           log-file-suffix: '${{matrix.toolchain}}.txt'
+          use-github-cache: false
       - name: Checkout Code
         uses: actions/checkout@v2
 
@@ -42,8 +44,8 @@ jobs:
             ${{ runner.os }}-build- 
 
       - name: Configure (${{ matrix.configuration }})
-        run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_CUDA=ON
-
+        run: |
+          cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_CUDA=ON
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
 
@@ -59,4 +61,3 @@ jobs:
         with:
           name: build-artifacts
           path: build/
-
