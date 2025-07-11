@@ -27,7 +27,6 @@ jobs:
       - name: Setup CUDA Toolkit
         uses: Jimver/cuda-toolkit@v0.2.26
         id: cuda-toolkit
-        use-github-cache: false
         with:
           cuda: '12.8.0'
           log-file-suffix: '${{matrix.toolchain}}.txt'
