@@ -30,8 +30,10 @@ jobs:
       - name: Cache build
         uses: actions/cache@v4
         with:
-          path: build/
-          key: ${{ runner.os }}-build-${{ hashFiles('**/CMakeLists.txt') }}
+          path: |
+            build/
+            !build/_deps/opencv-src/
+          key: ${{ runner.os }}-build-${{ hashFiles('**/CMakeLists.txt', '**/Dependencies.cmake') }}
           restore-keys: |
             ${{ runner.os }}-build-
 
@@ -40,6 +42,17 @@ jobs:
 
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
+
+      - name: Clean up build artifacts
+        run: |
+          cd build
+          find . -name "*.o" -delete
+          find . -name "*.obj" -delete
+          find . -name "*.a" -delete
+          find . -name "*.lib" -delete
+          find . -name "CMakeFiles" -type d -exec rm -rf {} + 2>/dev/null || true
+          find . -name "_deps" -type d -exec rm -rf {} + 2>/dev/null || true
+          echo "Cleaned up build artifacts"
 
       - name: Test
         working-directory: build
@@ -52,4 +65,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: build/
+          path: |
+            build/cv
+            build/libengine.so
+            build/tests/*
+            !build/_deps/
+            !build/CMakeFiles/
+            !build/**/*.o
+            !build/**/*.obj
+            !build/**/*.a
+            !build/**/*.lib

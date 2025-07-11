@@ -38,6 +38,20 @@ else()
                 "WITH_FFMPEG OFF"
                 "BUILD_PERF_TESTS OFF"
                 "BUILD_TESTS OFF"
+                "BUILD_EXAMPLES OFF"
+                "BUILD_DOCS OFF"
+                "WITH_OPENEXR OFF"
+                "WITH_TIFF OFF"
+                "WITH_WEBP OFF"
+                "WITH_OPENJPEG OFF"
+                "WITH_JASPER OFF"
+                "WITH_PROTOBUF OFF"
+                "BUILD_opencv_apps OFF"
+                "BUILD_opencv_js OFF"
+                "BUILD_opencv_ts OFF"
+                "BUILD_opencv_python2 OFF"
+                "BUILD_opencv_python_bindings_generator OFF"
+                "BUILD_opencv_python_tests OFF"
                 "CMAKE_INSTALL_PREFIX ${OpenCV_INSTALL_DIR}"
     )
     set(OpenCV_DIR ${OpenCV_INSTALL_DIR}/lib/cmake/opencv4)
@@ -49,6 +63,8 @@ else()
     add_custom_target(
             install_opencv ALL
             COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/_deps/opencv-build --target install
+            COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_CURRENT_BINARY_DIR}/_deps/opencv-src
+            COMMENT "Installing OpenCV and cleaning up source files"
     )
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif ()

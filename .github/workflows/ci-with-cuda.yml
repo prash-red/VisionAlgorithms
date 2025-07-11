@@ -24,22 +24,31 @@ jobs:
             compiler: nvcc
 
     steps:
+      - name: Check initial disk space
+        run: df -h
+
       - name: Setup CUDA Toolkit
         uses: Jimver/cuda-toolkit@v0.2.26
         id: cuda-toolkit
         with:
           cuda: '12.8.0'
           log-file-suffix: '${{matrix.toolchain}}.txt'
-          use-github-cache: false
+          use-github-cache: true
+
+      - name: Check disk space after CUDA install
+        run: df -h
       - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Cache build
         uses: actions/cache@v4
         with:
-          path: build/
-          key: ${{ runner.os }}-build-${{ hashFiles('**/CMakeLists.txt') }}
+          path: |
+            build/
+            !build/_deps/opencv-src/
+          key: ${{ runner.os }}-cuda-build-${{ hashFiles('**/CMakeLists.txt', '**/Dependencies.cmake') }}
           restore-keys: |
+            ${{ runner.os }}-cuda-build-
             ${{ runner.os }}-build- 
 
       - name: Configure (${{ matrix.configuration }})
@@ -47,6 +56,21 @@ jobs:
           cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_CUDA=ON
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
+
+      - name: Check disk space after build
+        run: df -h
+
+      - name: Clean up build artifacts
+        run: |
+          cd build
+          find . -name "*.o" -delete
+          find . -name "*.obj" -delete
+          find . -name "*.a" -delete
+          find . -name "*.lib" -delete
+          find . -name "CMakeFiles" -type d -exec rm -rf {} + 2>/dev/null || true
+          find . -name "_deps" -type d -exec rm -rf {} + 2>/dev/null || true
+          echo "Cleaned up build artifacts"
+          df -h
 
       - name: Test
         working-directory: build
@@ -59,4 +83,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: build/
+          path: |
+            build/cv
+            build/libengine.so
+            build/tests/*
+            !build/_deps/
+            !build/CMakeFiles/
+            !build/**/*.o
+            !build/**/*.obj
+            !build/**/*.a
+            !build/**/*.lib
