@@ -37,3 +37,6 @@ build/
 
 # Jetbrains files
 .idea/
+
+# Test output
+Testing
