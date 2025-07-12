@@ -1,7 +1,8 @@
-#include "constants.h"
 #include <algorithms/cpu_homographer.h>
+#include <catch2/catch_approx.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <constants.h>
 #ifdef USE_CUDA
 #    include <algorithms/cuda_homographer.cuh>
 #endif
@@ -38,15 +39,15 @@ TEMPLATE_LIST_TEST_CASE_METHOD(HomographerFixture, "Test Homographer", "[class][
         auto homography = homographer.calculateHomography(source, destination);
 
         CHECK(homography.size() == AbstractHomographer::HOMOGRAPHY_SIZE);
-        CHECK(homography[0] == Approx(2.0f));
-        CHECK(homography[1] == Approx(0.0f));
-        CHECK(homography[2] == Approx(0.0f));
-        CHECK(homography[3] == Approx(0.0f));
-        CHECK(homography[4] == Approx(2.0f));
-        CHECK(homography[5] == Approx(0.0f));
-        CHECK(homography[6] == Approx(0.0f));
-        CHECK(homography[7] == Approx(0.0f));
-        CHECK(homography[8] == Approx(1.0f));
+        CHECK(homography[0] == Catch::Approx(2.0f));
+        CHECK(homography[1] == Catch::Approx(0.0f));
+        CHECK(homography[2] == Catch::Approx(0.0f));
+        CHECK(homography[3] == Catch::Approx(0.0f));
+        CHECK(homography[4] == Catch::Approx(2.0f));
+        CHECK(homography[5] == Catch::Approx(0.0f));
+        CHECK(homography[6] == Catch::Approx(0.0f));
+        CHECK(homography[7] == Catch::Approx(0.0f));
+        CHECK(homography[8] == Catch::Approx(1.0f));
     }
 
     SECTION("test backwardMap") {
