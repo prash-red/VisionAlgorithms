@@ -27,13 +27,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      #      - name: Cache build
-      #        uses: actions/cache@v4
-      #        with:
-      #          path: build/
-      #          key: ${{ runner.os }}-build-${{ hashFiles('**/CMakeLists.txt') }}
-      #          restore-keys: |
-      #            ${{ runner.os }}-build-
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: ${{ runner.os }}-build-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-build- 
 
       - name: Configure (${{ matrix.configuration }})
         run: |
