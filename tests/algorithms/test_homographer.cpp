@@ -24,15 +24,15 @@ TEST_CASE("Test CPUHomographer") {
         auto homography = homographer.calculateHomography(source, destination);
 
         CHECK(homography.size() == AbstractHomographer::HOMOGRAPHY_SIZE);
-        CHECK(homography[0] == 2.0f);
-        CHECK(homography[1] == 0.0f);
-        CHECK(homography[2] == 0.0f);
-        CHECK(homography[3] == 0.0f);
-        CHECK(homography[4] == 2.0f);
-        CHECK(homography[5] == 0.0f);
-        CHECK(homography[6] == 0.0f);
-        CHECK(homography[7] == 0.0f);
-        CHECK(homography[8] == 1.0f);
+        CHECK(homography[0] == Approx(2.0f));
+        CHECK(homography[1] == Approx(0.0f));
+        CHECK(homography[2] == Approx(0.0f));
+        CHECK(homography[3] == Approx(0.0f));
+        CHECK(homography[4] == Approx(2.0f));
+        CHECK(homography[5] == Approx(0.0f));
+        CHECK(homography[6] == Approx(0.0f));
+        CHECK(homography[7] == Approx(0.0f));
+        CHECK(homography[8] == Approx(1.0f));
     }
 
     SECTION("test backwardMap") {
