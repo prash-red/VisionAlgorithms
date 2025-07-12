@@ -9,7 +9,6 @@
 
 #include <iostream>
 
-using namespace cv;
 int run_homography(const std::string& imagePath, std::vector<int>& sourceCoords, std::vector<int>& destinationCoords,
                    const std::string& coordsFile, const std::string& outputFile, bool useCuda) {
     // If coords_file is provided, parse it to fill sourceCoords and
@@ -57,8 +56,9 @@ int run_homography(const std::string& imagePath, std::vector<int>& sourceCoords,
         }
     }
 
-    std::array<std::array<int, Homographer::HOMOGRAPHY_2D_COORDS_SIZE>, Homographer::NUM_2D_COORDS> source{};
-    std::array<std::array<int, Homographer::HOMOGRAPHY_2D_COORDS_SIZE>, Homographer::NUM_2D_COORDS> destination{};
+    std::array<std::array<int, AbstractHomographer::HOMOGRAPHY_2D_COORDS_SIZE>, AbstractHomographer::NUM_2D_COORDS> source{};
+    std::array<std::array<int, AbstractHomographer::HOMOGRAPHY_2D_COORDS_SIZE>, AbstractHomographer::NUM_2D_COORDS>
+        destination{};
 
     for (size_t i = 0; i < 4; ++i) {
         source[i][0] = sourceCoords[2 * i];
@@ -67,7 +67,7 @@ int run_homography(const std::string& imagePath, std::vector<int>& sourceCoords,
         destination[i][1] = destinationCoords[2 * i + 1];
     }
 
-    std::unique_ptr<Homographer> homographer;
+    std::unique_ptr<AbstractHomographer> homographer;
     if (useCuda) {
 #ifdef USE_CUDA
         homographer = std::make_unique<CUDAHomographer>();
@@ -78,24 +78,25 @@ int run_homography(const std::string& imagePath, std::vector<int>& sourceCoords,
         homographer = std::make_unique<CPUHomographer>();
     }
 
-    std::array<float, Homographer::HOMOGRAPHY_SIZE> homography = homographer->calculateHomography(source, destination);
+    std::array<float, AbstractHomographer::HOMOGRAPHY_SIZE> homography = homographer->calculateHomography(source,
+                                                                                                          destination);
 
-    Mat image = imread(imagePath, IMREAD_COLOR);
+    cv::Mat image = cv::imread(imagePath, cv::IMREAD_COLOR);
 
     if (!image.data) {
         printf("No image data \n");
         return -1;
     }
 
-    Mat outputImage;
+    cv::Mat outputImage;
     flip(image, image, 0);
     homographer->backwardMap(homography, image, outputImage);
     flip(outputImage, outputImage, 0);
 
     if (outputFile.empty()) {
-        namedWindow("Display Image", WINDOW_NORMAL);
+        cv::namedWindow("Display Image", cv::WINDOW_NORMAL);
         imshow("Display Image", outputImage);
-        waitKey(0);
+        cv::waitKey(0);
     } else {
         imwrite(outputFile, outputImage);
     }

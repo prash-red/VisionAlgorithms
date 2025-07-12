@@ -1,8 +1,8 @@
-#include <algorithms/base_homographer.h>
+#include <algorithms/abstract_homographer.h>
 
-array<float, Homographer::HOMOGRAPHY_SIZE>
-Homographer::calculateHomography(const array<array<int, HOMOGRAPHY_2D_COORDS_SIZE>, NUM_2D_COORDS>& source,
-                                 const array<array<int, HOMOGRAPHY_2D_COORDS_SIZE>, NUM_2D_COORDS>& destination) {
+array<float, AbstractHomographer::HOMOGRAPHY_SIZE>
+AbstractHomographer::calculateHomography(const array<array<int, HOMOGRAPHY_2D_COORDS_SIZE>, NUM_2D_COORDS>& source,
+                                         const array<array<int, HOMOGRAPHY_2D_COORDS_SIZE>, NUM_2D_COORDS>& destination) {
     const array<float, 64> equationMatrix = {-static_cast<float>(source[0][0]),
                                              -static_cast<float>(source[0][1]),
                                              -1.0f,
@@ -92,8 +92,8 @@ Homographer::calculateHomography(const array<array<int, HOMOGRAPHY_2D_COORDS_SIZ
     return homography;
 }
 
-void Homographer::backwardMap(const array<float, HOMOGRAPHY_SIZE>& homography, cv::Mat& sourceImage,
-                              cv::Mat& outputImage) {
+void AbstractHomographer::backwardMap(const array<float, HOMOGRAPHY_SIZE>& homography, cv::Mat& sourceImage,
+                                      cv::Mat& outputImage) {
     int height = sourceImage.rows;
     int width = sourceImage.cols;
 

@@ -1,8 +1,8 @@
 #pragma once
-#include <algorithms/base_homographer.h>
+#include <algorithms/abstract_homographer.h>
 #include <cublas_v2.h>
 
-class CUDAHomographer : public Homographer {
+class CUDAHomographer : public AbstractHomographer {
 public:
     CUDAHomographer();
     ~CUDAHomographer();

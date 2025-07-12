@@ -86,8 +86,7 @@ function(setup_target_for_coverage _targetname _testrunner _outputname)
 	
 	# Show info where to find the report
 	add_custom_command(TARGET ${_targetname} POST_BUILD
-		COMMAND ;
-        COMMENT "${BoldMagenta}Open ./${_outputname}/index.html in your browser to view the coverage report.${ColourReset}"
+	    COMMAND ${CMAKE_COMMAND} -E echo "${BoldMagenta}Open ./${_outputname}/index.html in your browser to view the coverage report.${ColourReset}"
 	)
 
 endfunction() # setup_target_for_coverage

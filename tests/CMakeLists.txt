@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.31)
 # List all files containing tests. (Change as needed)
 set(TESTFILES        # All .cpp files in tests/
     main.cpp
+    algorithms/test_homographer.cpp
 )
 
 set(TEST_MAIN unit_tests)   # Default name for test executable (change if you wish).
