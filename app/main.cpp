@@ -56,9 +56,8 @@ int run_homography(const std::string& imagePath, std::vector<int>& sourceCoords,
         }
     }
 
-    std::array<std::array<int, AbstractHomographer::HOMOGRAPHY_2D_COORDS_SIZE>, AbstractHomographer::NUM_2D_COORDS> source{};
-    std::array<std::array<int, AbstractHomographer::HOMOGRAPHY_2D_COORDS_SIZE>, AbstractHomographer::NUM_2D_COORDS>
-        destination{};
+    PointArray source{};
+    PointArray destination{};
 
     for (size_t i = 0; i < 4; ++i) {
         source[i][0] = sourceCoords[2 * i];
