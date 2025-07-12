@@ -9,20 +9,20 @@ using namespace std;
 /**
  * @brief Provides methods for homography computation and backward mapping.
  *
- * The Homographer class offers static methods to:
+ * The AbstractHomographer class offers static methods to:
  * - Calculate a 3x3 homography matrix from four 2D source and destination point
  * pairs.
  * - Apply backward mapping to transform an image using a given homography
  * matrix.
  */
-class Homographer {
+class AbstractHomographer {
 public:
     static constexpr int HOMOGRAPHY_SIZE = 3 * 3;
     static constexpr int HOMOGRAPHY_2D_COORDS_SIZE = 2;
     static constexpr int NUM_2D_COORDS = 4;
 
-    virtual ~Homographer() = default;
-    Homographer() = default;
+    virtual ~AbstractHomographer() = default;
+    AbstractHomographer() = default;
     /**
     * @brief Calculates the 3x3 homography matrix that maps four source points
     * to four destination points.

@@ -1,7 +1,7 @@
 #pragma once
-#include <algorithms/base_homographer.h>
+#include <algorithms/abstract_homographer.h>
 
-class CPUHomographer : public Homographer {
+class CPUHomographer : public AbstractHomographer {
 protected:
     void transformCoordinates(cv::Mat homogeneousCoordinates, cv::Mat inverseTransform,
                               cv::Mat transformedCoordinates) override;

@@ -8,7 +8,7 @@ jobs:
   build-and-test:
 
     name: ${{ matrix.toolchain }}
-    runs-on: ${{ matrix.os }}
+    runs-on: self-hosted
 
     strategy:
       matrix:
@@ -24,28 +24,6 @@ jobs:
             compiler: nvcc
 
     steps:
-      - name: Free Disk Space Before Build
-        run: |
-          echo "Disk space before cleanup:"
-          df -h
-          sudo rm -rf /usr/local/.ghcup
-          sudo rm -rf /opt/hostedtoolcache/CodeQL
-          sudo rm -rf /usr/local/lib/android/sdk/ndk
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/share/boost
-          sudo apt-get clean
-          echo "Disk space after cleanup:"
-          df -h
-
-      - name: Setup CUDA Toolkit
-        uses: Jimver/cuda-toolkit@v0.2.26
-        id: cuda-toolkit
-        with:
-          cuda: '12.8.0'
-          log-file-suffix: '${{matrix.toolchain}}.txt'
-          use-github-cache: false
-
       - name: Checkout Code
         uses: actions/checkout@v2
 

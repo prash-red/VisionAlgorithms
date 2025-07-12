@@ -67,7 +67,7 @@ endif ()
 # --------------------------------------------------------------------------------
 set(SOURCES          # All .cpp files in src/
         src/algorithms/cpu_homographer.cpp
-        src/algorithms/base_homographer.cpp
+        src/algorithms/abstract_homographer.cpp
 )
 if(ENABLE_CUDA)
     list(APPEND SOURCES src/algorithms/cuda_homographer.cu)
