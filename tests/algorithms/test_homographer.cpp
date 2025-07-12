@@ -2,7 +2,7 @@
 #include <algorithms/cpu_homographer.h>
 #include <catch2/catch_test_macros.hpp>
 #ifdef USE_CUDA
-#    include "algorithms/cuda_homographer.cuh"
+#    include <algorithms/cuda_homographer.cuh>
 #endif
 
 TEST_CASE("Test CPUHomographer") {
