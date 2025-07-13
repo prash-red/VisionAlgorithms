@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "description": "A CLI tool to run computer vision algorithms",
     "homepage": "https://github.com/prash-red/VisionAlgorithms",
+    "builtin-baseline": "3426db05b996481ca31e95fff3734cf23e0f51bc",
     "dependencies": [
         "opencv4",
         "cli11",
