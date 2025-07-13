@@ -27,17 +27,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+
       - name: Cache build
         uses: actions/cache@v4
         with:
           path: build/
-          key: ${{ runner.os }}-build-${{ hashFiles('**/CMakeLists.txt') }}
+          key: ${{ runner.os }}-build-${{ hashFiles('**/CMakeLists.txt', 'vcpkg.json') }}
           restore-keys: |
             ${{ runner.os }}-build- 
 
       - name: Configure (${{ matrix.configuration }})
         run: |
-          cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_CUDA=ON
+          cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_CUDA=ON -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_MANIFEST_FEATURES=cuda
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
 

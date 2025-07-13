@@ -1,3 +1,13 @@
+# NOTE: This file has been deprecated in favor of vcpkg dependency management.
+# Dependencies are now defined in vcpkg.json and managed through the vcpkg toolchain.
+# 
+# To migrate to the new system:
+# 1. Install vcpkg: https://vcpkg.io/en/getting-started
+# 2. Use: cmake -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
+# 3. Or use CMake presets: cmake --preset default
+#
+# This file is kept for reference only and will be removed in a future version.
+
 # download CPM.cmake
 file(
         DOWNLOAD

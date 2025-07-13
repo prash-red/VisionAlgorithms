@@ -1,0 +1,22 @@
+{
+    "name": "vision-algorithms",
+    "version": "0.1.0",
+    "description": "A CLI tool to run computer vision algorithms",
+    "homepage": "https://github.com/prash-red/VisionAlgorithms",
+    "dependencies": [
+        "opencv4",
+        "cli11",
+        "catch2"
+    ],
+    "features": {
+        "cuda": {
+            "description": "Enable CUDA support",
+            "dependencies": [
+                {
+                    "name": "opencv4",
+                    "features": ["cuda"]
+                }
+            ]
+        }
+    }
+}

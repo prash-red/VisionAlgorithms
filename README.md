@@ -11,31 +11,76 @@ Currently, only the homography algorithm is implemented.
 
 ## Build Instructions
 
-1. ### Clone the repository:
+### Prerequisites
+
+1. **Install vcpkg** (if not already installed):
+   ```bash
+   git clone https://github.com/Microsoft/vcpkg.git
+   cd vcpkg
+   ./bootstrap-vcpkg.sh  # Linux/macOS
+   # or .\bootstrap-vcpkg.bat  # Windows
+   ```
+
+2. **Set environment variable**:
+   ```bash
+   export VCPKG_ROOT=/path/to/vcpkg  # Linux/macOS
+   # or set VCPKG_ROOT=C:\path\to\vcpkg  # Windows
+   ```
+
+### Build Steps
+
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/prash-red/VisionAlgorithms.git
    cd VisionAlgorithms
    ```
 
-2. ### Install dependencies:
-    - CMake (>= 3.14)
-    - OpenCV (>= 4.5)
-    - CLI11 (>= 2.1)
-    - CUDA (optional, for GPU support)
-
-   OpenCV is recommended to built from source
-
-3. ### Build the project:
-   3.1 **For CPU**
+2. **Build the project**:
+   
+   **Option A: Using CMake presets (recommended)**:
    ```bash
-   cmake -S ./ -B build
-   cmake --build build   
+   # For Release build
+   cmake --preset default
+   cmake --build build
+   
+   # For Debug build
+   cmake --preset debug
+   cmake --build build-debug
+   
+   # For CUDA build
+   cmake --preset cuda
+   cmake --build build-cuda
    ```
-   3.2 **For GPU** (requires CUDA)
-    ```bash
-    cmake -S ./ -B build -DENABLE_CUDA=ON
-    cmake --build build
-    ```
+   
+   **Option B: Manual CMake configuration**:
+   ```bash
+   # For CPU build
+   cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
+   cmake --build build
+   
+   # For GPU build (requires CUDA)
+   cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DENABLE_CUDA=ON -DVCPKG_MANIFEST_FEATURES=cuda
+   cmake --build build
+   ```
+
+### Dependencies
+
+Dependencies are automatically managed by vcpkg based on the `vcpkg.json` manifest:
+- **OpenCV** (>= 4.5.0): Core computer vision library
+- **CLI11** (>= 2.1.0): Command line interface library
+- **Catch2** (>= 3.0.0): Testing framework
+
+For CUDA builds, OpenCV with CUDA support is automatically included.
+
+### Migration from CPM
+
+This project previously used CPM (CPM.cmake) for dependency management. If you have been using the old system:
+
+1. **Remove old build directories**: `rm -rf build/` to clear any CPM-based artifacts
+2. **Install vcpkg**: Follow the vcpkg installation instructions above
+3. **Use new build commands**: Use the vcpkg-based build instructions provided above
+
+The old CPM-based system has been deprecated and `cmake/Dependencies.cmake` is no longer used.
 
 ## Usage
 
