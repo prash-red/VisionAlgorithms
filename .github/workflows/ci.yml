@@ -28,6 +28,9 @@ jobs:
       - name: Install X11 dependencies
         run: sudo apt install -y libx11-dev libxft-dev libxext-dev
 
+      - name: Install build dependencies for libxcrypt
+        run: sudo apt-get update && sudo apt-get install -y autoconf automake libtool pkg-config libltdl-dev
+
       - name: Checkout Code
         uses: actions/checkout@v2
 
