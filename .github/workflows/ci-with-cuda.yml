@@ -8,7 +8,7 @@ jobs:
   build-and-test:
 
     name: ${{ matrix.toolchain }}
-    runs-on: self-hosted
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
@@ -22,10 +22,51 @@ jobs:
           - toolchain: linux-nvcc
             os: ubuntu-latest
             compiler: nvcc
+            vcpkg_triplet: x64-linux-release
 
     steps:
+      - name: Free Disk Space Before Build
+        run: |
+          echo "Disk space before cleanup:"
+          df -h
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/local/lib/android/sdk/ndk
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo apt-get clean
+          echo "Disk space after cleanup:"
+          df -h
+
+      - name: Setup CUDA Toolkit
+        uses: Jimver/cuda-toolkit@v0.2.26
+        id: cuda-toolkit
+        with:
+          cuda: '12.8.0'
+          log-file-suffix: '${{matrix.toolchain}}.txt'
+          use-github-cache: false
+
+      - name: Install X11 dependencies
+        run: sudo apt install -y libx11-dev libxft-dev libxext-dev
+
+      - name: Install build dependencies for libxcrypt
+        run: sudo apt-get update && sudo apt-get install -y autoconf automake libtool pkg-config libltdl-dev
+
+      - name: Install at-spi2-core dependencies
+        run: sudo apt-get update && sudo apt-get install -y libxi-dev libxtst-dev
+
       - name: Checkout Code
         uses: actions/checkout@v2
+
+      - name: vcpkg build
+        id: vcpkg
+        uses: johnwason/vcpkg-action@v7.0.1
+        with:
+          manifest-dir: ${{ github.workspace }} # Set to directory containing vcpkg.json
+          triplet: ${{ matrix.vcpkg_triplet }}
+          cache-key: ${{ matrix.os }}
+          token: ${{ github.token }}
 
       - name: Cache build
         uses: actions/cache@v4
@@ -36,16 +77,17 @@ jobs:
             ${{ runner.os }}-build- 
 
       - name: Configure (${{ matrix.configuration }})
-        run: |
-          cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_CUDA=ON
+        run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DENABLE_CUDA=ON ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
 
-      - name: Test
-        working-directory: build
-        env:
-          CTEST_OUTPUT_ON_FAILURE: 1
-        run: ctest -C ${{ matrix.configuration }}
+      - name: Upload vcpkg artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcpkg-artifacts
+          path: vcpkg/
 
       - name: Upload build artifacts
         if: always()

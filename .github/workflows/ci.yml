@@ -22,10 +22,29 @@ jobs:
           - toolchain: linux-gcc
             os: ubuntu-latest
             compiler: gcc
-
+            vcpkg_triplet: x64-linux-release
+    
     steps:
+      - name: Install X11 dependencies
+        run: sudo apt install -y libx11-dev libxft-dev libxext-dev
+
+      - name: Install build dependencies for libxcrypt
+        run: sudo apt-get update && sudo apt-get install -y autoconf automake libtool pkg-config libltdl-dev
+
+      - name: Install at-spi2-core dependencies
+        run: sudo apt-get update && sudo apt-get install -y libxi-dev libxtst-dev
+
       - name: Checkout Code
         uses: actions/checkout@v2
+
+      - name: vcpkg build
+        id: vcpkg
+        uses: johnwason/vcpkg-action@v7.0.1
+        with:
+          manifest-dir: ${{ github.workspace }} # Set to directory containing vcpkg.json
+          triplet: ${{ matrix.vcpkg_triplet }}
+          cache-key: ${{ matrix.os }}
+          token: ${{ github.token }}
 
       - name: Cache build
         uses: actions/cache@v4
@@ -36,7 +55,7 @@ jobs:
             ${{ runner.os }}-build-
 
       - name: Configure (${{ matrix.configuration }})
-        run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+        run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
 
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
@@ -46,6 +65,13 @@ jobs:
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
         run: ctest -C ${{ matrix.configuration }}
+
+      - name: Upload vcpkg artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcpkg-artifacts
+          path: vcpkg/
 
       - name: Upload build artifacts
         if: always()
