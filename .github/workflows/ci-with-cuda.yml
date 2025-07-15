@@ -52,7 +52,7 @@ jobs:
 
       - name: vcpkg build
         id: vcpkg
-        uses: johnwason/vcpkg-action@v7
+        uses: johnwason/vcpkg-action@v7.0.1
         with:
           manifest-dir: ${{ github.workspace }} # Set to directory containing vcpkg.json
           triplet: ${{ matrix.vcpkg_triplet }}
