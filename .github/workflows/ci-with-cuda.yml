@@ -53,6 +53,9 @@ jobs:
       - name: Install build dependencies for libxcrypt
         run: sudo apt-get update && sudo apt-get install -y autoconf automake libtool pkg-config libltdl-dev
 
+      - name: Install at-spi2-core dependencies
+        run: sudo apt-get update && sudo apt-get install -y libxi-dev libxtst-dev
+
       - name: Checkout Code
         uses: actions/checkout@v2
 
