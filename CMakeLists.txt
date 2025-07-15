@@ -59,7 +59,7 @@ target_link_libraries(compiler_flags INTERFACE developer_flags)
 
 find_package(OpenCV REQUIRED)
 find_package(CLI11 REQUIRED)
-find_package(Catch2)
+find_package(Catch2 REQUIRED)
 
 if (ENABLE_CUDA)
     find_package(CUDAToolkit REQUIRED)
