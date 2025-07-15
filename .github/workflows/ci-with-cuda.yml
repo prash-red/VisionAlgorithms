@@ -47,6 +47,9 @@ jobs:
           log-file-suffix: '${{matrix.toolchain}}.txt'
           use-github-cache: false
 
+      - name: Install X11 dependencies
+        run: sudo apt install -y libx11-dev libxft-dev libxext-dev
+
       - name: Checkout Code
         uses: actions/checkout@v2
 
