@@ -56,14 +56,6 @@ jobs:
       - name: Install at-spi2-core dependencies
         run: sudo apt-get update && sudo apt-get install -y libxi-dev libxtst-dev
 
-      - name: Install system dependencies for gtk3
-        run: sudo apt-get update && sudo apt-get install -y \
-          libdbus-1-dev libxi-dev libxtst-dev libx11-dev libxrandr-dev libxinerama-dev \
-          libxcursor-dev libxcomposite-dev libxdamage-dev libxfixes-dev libxrender-dev \
-          libxext-dev libxkbcommon-dev libatk1.0-dev libpango1.0-dev libcairo2-dev \
-          libgdk-pixbuf2.0-dev libglib2.0-dev libepoxy-dev libwayland-dev libinput-dev \
-          libxkbfile-dev python3-pip ninja-build
-
       - name: Checkout Code
         uses: actions/checkout@v2
 
@@ -89,6 +81,13 @@ jobs:
 
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}
+
+      - name: Upload vcpkg artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcpkg-artifacts
+          path: vcpkg/
 
       - name: Upload build artifacts
         if: always()
