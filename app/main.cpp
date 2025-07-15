@@ -95,6 +95,7 @@ int run_homography(const std::string& imagePath, std::vector<int>& sourceCoords,
 
     if (outputFile.empty()) {
         cv::namedWindow("Display Image", cv::WINDOW_NORMAL);
+        cv::resizeWindow("Display Image", 100, 100);
         imshow("Display Image", outputImage);
         cv::waitKey(0);
     } else {

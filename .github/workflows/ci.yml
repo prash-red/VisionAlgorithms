@@ -22,10 +22,20 @@ jobs:
           - toolchain: linux-gcc
             os: ubuntu-latest
             compiler: gcc
-
+            vcpkg_triplet: x64-linux-release
+    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+
+      - name: vcpkg build
+        id: vcpkg
+        uses: johnwason/vcpkg-action@v7
+        with:
+          manifest-dir: ${{ github.workspace }} # Set to directory containing vcpkg.json
+          triplet: ${{ matrix.vcpkg_triplet }}
+          cache-key: ${{ matrix.os }}
+          token: ${{ github.token }}
 
       - name: Cache build
         uses: actions/cache@v4
@@ -36,7 +46,7 @@ jobs:
             ${{ runner.os }}-build-
 
       - name: Configure (${{ matrix.configuration }})
-        run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+        run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
 
       - name: Build with ${{ matrix.compiler }}
         run: cmake --build build --config ${{ matrix.configuration }}

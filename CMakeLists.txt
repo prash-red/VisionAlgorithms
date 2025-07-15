@@ -33,7 +33,6 @@ include(Documentation)
 include(LTO)
 include(Misc)
 include(Warnings)
-include(Dependencies)
 if(ENABLE_CUDA)
     include(AutoDetectCudaArch)
 endif ()
@@ -58,11 +57,15 @@ target_link_libraries(compiler_flags INTERFACE developer_flags)
 #                                  Dependencies
 # --------------------------------------------------------------------------------
 
+find_package(OpenCV REQUIRED)
+find_package(CLI11 REQUIRED)
+find_package(Catch2)
+
 if (ENABLE_CUDA)
     find_package(CUDAToolkit REQUIRED)
 endif ()
 
-    # --------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------
 #                         Locate files (change as needed).
 # --------------------------------------------------------------------------------
 set(SOURCES          # All .cpp files in src/
@@ -82,10 +85,6 @@ set(LIBRARY_NAME engine)  # Default name for the library built from src/*.cpp (c
 # --------------------------------------------------------------------------------
 # Compile all sources into a library.
 add_library(${LIBRARY_NAME} SHARED ${SOURCES})
-
-if (NOT OpenCV_FOUND)
-    add_dependencies(${LIBRARY_NAME} install_opencv)
-endif ()
 
 # Lib needs its header files, and users of the library must also see these (PUBLIC). (No change needed)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include ${OpenCV_INCLUDE_DIRS})

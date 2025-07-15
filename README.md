@@ -18,12 +18,20 @@ Currently, only the homography algorithm is implemented.
    ```
 
 2. ### Install dependencies:
-    - CMake (>= 3.14)
-    - OpenCV (>= 4.5)
-    - CLI11 (>= 2.1)
+   You can either install the required packages manually or use vcpkg for dependency management.
+
+   **Manual installation:**
+    - CMake (\>= 3.31)
+    - OpenCV (\>= 4.11)
+    - CLI11
+    - Catch2
     - CUDA (optional, for GPU support)
 
-   OpenCV is recommended to built from source
+   OpenCV is recommended to be built from source.
+
+   **Using vcpkg:**
+   See the official installation
+   guide: [https://github.com/microsoft/vcpkg#quick-start](https://github.com/microsoft/vcpkg#quick-start)
 
 3. ### Build the project:
    3.1 **For CPU**
@@ -34,6 +42,11 @@ Currently, only the homography algorithm is implemented.
    3.2 **For GPU** (requires CUDA)
     ```bash
     cmake -S ./ -B build -DENABLE_CUDA=ON
+    cmake --build build
+    ```
+   3.3 **For CPU with vcpkg**
+    ```bash
+    cmake -S ./ -B build -DCMAKE_TOOLCHAIN_FILE=<path_to_vcpkg>/scripts/buildsystems/vcpkg.cmake
     cmake --build build
     ```
 
